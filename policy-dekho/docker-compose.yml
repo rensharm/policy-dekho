@@ -1,0 +1,43 @@
+services:
+  api-gateway:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - policies
+      - users
+      
+
+  policies:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/policies/Dockerfile
+    ports:
+      - 3001:3001
+    depends_on:
+      - neo4j
+    
+
+  users:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: apps/users/Dockerfile
+    ports:
+      - 3002:3002
+    depends_on:
+      - neo4j
+
+  neo4j:
+    image: neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - $HOME/neo4j/data:/data
+    environment:
+      - NEO4J_AUTH=neo4j/password
