@@ -1,13 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'node:18.17.1-alpine3.18' }
+    }
 
     stages {
-        stage("Initialize"){
-            steps {
-                sh def dockerHome = tool 'myDocker'
-                sh env.PATH = "${dockerHome}/bin:${env.PATH}"
-            }
-        }
         stage("verify tooling") {
             steps  {
                 sh '''
